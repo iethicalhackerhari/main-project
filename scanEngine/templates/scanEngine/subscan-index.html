@@ -29,27 +29,6 @@
 <div id="spinner"></div>
 </div>
 
-<div class="container-fluid">
-    <h3 class="mt-4" style="font-family: cursive; font-weight: bold;">Subdomain Discovery from Github</h3>
-    <form action="{% url 'subdomain-page' %}" id="gitsubFormId" method="POST">
-        {% csrf_token %}
-        <!-- Domain -->
-        <div class="form-outline">
-            <input type="text" id="formControlLg" class="form-control form-control-lg" name="github-subdomain"
-                required />
-            <label class="form-label" for="formControlLg">Domain</label>
-        </div>
-        <br>
-        <!-- Token -->
-        <div class="form-outline">
-            <input type="text" id="formControlLg" class="form-control form-control-lg" name="github-token" required />
-            <label class="form-label" for="formControlLg">Github Token</label>
-        </div>
-        <br>
-        <button type="submit" id="btnSubmit" class="btn btn-danger" onclick="loadingPage()">Submit</button>
-    </form>
-</div>
-
 <div class="alert alert-info text-center mt-4" id="id-message" role="alert" style="visibility: hidden">
     Process Finished!!
     <br>
