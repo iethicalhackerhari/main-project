@@ -16,9 +16,10 @@ import threading
 import socket
 import json
 from collections import Counter
+# from subbrute import subbrute
 
 # external modules
-from .subbrute import subbrute
+
 import dns.resolver
 import requests
 
@@ -252,7 +253,7 @@ class enumratorBase(object):
 
             prev_links = links
             self.should_sleep()
-
+        print(self.subdomains)
         return self.subdomains
 
 
@@ -932,8 +933,8 @@ def main(domain, threads, savefile, ports, silent, verbose, enable_bruteforce, e
 
     if engines is None:
         chosenEnums = [
-            BaiduEnum, YahooEnum, GoogleEnum, BingEnum, AskEnum,
-            NetcraftEnum, DNSdumpster, Virustotal, ThreatCrowd,
+            BaiduEnum, YahooEnum, BingEnum, AskEnum,
+            NetcraftEnum, DNSdumpster, ThreatCrowd,
             CrtSearch, PassiveDNS
         ]
     else:
@@ -943,6 +944,7 @@ def main(domain, threads, savefile, ports, silent, verbose, enable_bruteforce, e
                 chosenEnums.append(supported_engines[engine.lower()])
 
     # Start the engines enumeration
+    print('Starting the engine enumeeration...')
     enums = [enum(domain, [], q=subdomains_queue, silent=silent, verbose=verbose) for enum in chosenEnums]
     for enum in enums:
         enum.start()
@@ -966,12 +968,18 @@ def main(domain, threads, savefile, ports, silent, verbose, enable_bruteforce, e
         bruteforce_list = subbrute.print_target(parsed_domain.netloc, record_type, subs, resolvers, process_count, output, json_output, search_list, verbose)
 
     subdomains = search_list.union(bruteforce_list)
-
+    print(subdomains)
     if subdomains:
+        print('in subdomains if')
         subdomains = sorted(subdomains, key=subdomain_sorting_key)
 
         if savefile:
-            write_file(savefile, subdomains)
+            try:
+                print('in try')
+                write_file(savefile, subdomains)
+                print('out try')
+            except Exception as e :
+                print(e)
 
         if not silent:
             print(Y + "[-] Total Unique Subdomains Found: %s" % len(subdomains) + W)
@@ -986,6 +994,8 @@ def main(domain, threads, savefile, ports, silent, verbose, enable_bruteforce, e
         elif not silent:
             for subdomain in subdomains:
                 print(G + subdomain + W)
+    else:
+        print('no sd')
     return subdomains
 
 

@@ -32,7 +32,7 @@ domain_regex = re.compile(r"([a-z0-9]{2,}\.)+[a-z0-9]{2,5}")
 url_regex = re.compile(
     r"https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()!@:%_\+.~#?&\/\/=]*)"
 )
-output_dir = os.path.join(settings.BASE_DIR, "output/")
+output_dir = r"E:/main-project/web-recon/warf/warf/output/"
 tools_dir = os.path.join(settings.BASE_DIR, "tools/")
 
 timestr = time.strftime("%Y-%m-%d-%H-%M")
@@ -424,10 +424,11 @@ def subdomain_finder_task(subdomain, gitSubdomain, gitToken, pk=None):
 
         subprocess.run(
             [
-                "mv",
+                "move",
                 os.path.join(settings.BASE_DIR, f"{subdomain_output_file}"),
                 os.path.join(settings.BASE_DIR, f"output/subdomain/"),
-            ]
+                
+            ], shell=True
         )
 
         context = {"subdom": subdom}
@@ -478,7 +479,92 @@ def subdomain_finder(request, domain_url=None, pk=None):
     else:
         return render(request, "scanEngine/subdomain-index.html")
 
+##############################################################################################################
+@background(schedule=1)
+def subscan_finder_task(subdomain, gitSubdomain, gitToken, pk=None):
 
+    if subdomain != "None":
+        global subdomain_output_file
+        subdomain_output_file = "{}_{}.txt".format(subdomain, timestr)
+
+        if pk is not None:
+            scan_target = Scan.objects.get(id=pk)
+            ResultFileName.objects.create(
+                file_name=subdomain_output_file, scan_item=scan_target
+            )
+
+        subscan_search = subprocess.run(
+            [
+                "python",
+                tools_dir + 'SubDomainizer/SubDomainizer.py',
+                "-u",
+                subdomain,
+                "-o",
+                subdomain_output_file,
+            ],
+            capture_output=True,
+            text=True,
+        )
+
+        subprocess.run(
+            [
+                "move",
+                os.path.join(settings.BASE_DIR, f"{subdomain_output_file}"),
+                os.path.join(settings.BASE_DIR, f"output/subdomain/"),
+                
+            ], shell=True
+        )
+
+        
+        return context
+
+    if gitSubdomain != "None":
+        gitsubs = "github_subs_{}.txt".format(timestr)
+        result = subprocess.run(
+            [
+                "python",
+                tools_dir + 'github-subdomains.py',
+                "-t",
+                gitToken,
+                "-d",
+                gitSubdomain,
+            ],
+            capture_output=True,
+            text=True,
+        )
+
+        gitsubs_list = []
+
+        for line in result.stdout.splitlines():
+            gitsubs_list.append(line)
+
+        with open(gitsubs, "a+") as write_gitsubs_file:
+            for line in result.stdout:
+                write_gitsubs_file.write(line + "\n")
+
+        context = {"subdom": gitsubs_list}
+        return context
+
+
+def subscan_finder(request, domain_url=None, pk=None):
+    if request.method == "POST":
+        subdomain = str(request.POST.get("subdomain", domain_url))
+        gitSubdomain = str(request.POST.get("github-subdomain", None))
+        gitToken = str(request.POST.get("github-token", None))
+        global sub_context
+        if re.match(domain_regex, subdomain) or re.match(domain_regex, gitSubdomain):
+            sub_context = subscan_finder_task.now(
+                subdomain, gitSubdomain, gitToken, pk
+            )
+            return render(request, "scanEngine/subscan.html", sub_context)
+        else:
+            messages.warning(request, "Invalid Domain")
+            return render(request, "scanEngine/subscan-index.html")
+    else:
+        return render(request, "scanEngine/subscan-index.html")
+
+
+##############################################################################################################
 # Directory Brute Force
 @background(schedule=1)
 def directory_brute_force_task(directory, pk=None):
@@ -506,35 +592,41 @@ def directory_brute_force_task(directory, pk=None):
                 "60",
                 "-w",
                 f"wordlist/{wordlist_file}",
-                "--plain-text-report",
+                "--format plain",
+                "-o",
                 directory_output_file,
             ],
             capture_output=True,
             text=True,
         )
     else:
-        directory_search = subprocess.run(
-            [
-                sys.executable,
-                tools_dir + "dirsearch/dirsearch.py",
-                "-u",
-                directory,
-                "-t",
-                "60",
-                "-w",
-                tools_dir + 'dirsearch/robotsdis.txt',
-                "--plain-text-report",
-                directory_output_file,
-            ],
-            capture_output=True,
-            text=True,
-        )
+        print('in else of dir earch')
+        try:
+            directory_search = subprocess.run(
+                [
+                    sys.executable,
+                    tools_dir + "dirsearch/dirsearch.py",
+                    "-u",
+                    directory,
+                    "-t",
+                    "60",
+                    "-w",
+                    tools_dir + 'dirsearch/robotsdis.txt',
+                    "--format plain",
+                    "-o",
+                    directory_output_file,
+                ],
+                capture_output=True,
+                text=True,
+            )
+        except Exception as e:
+            print(e)
 
     subprocess.run(
         [
-            "mv",
-            os.path.join(settings.BASE_DIR, f"{directory_output_file}"),
-            os.path.join(settings.BASE_DIR, f"output/directory/"),
+            "move",
+            rf"E:\main-project\web-recon\warf\warf\{directory_output_file}",
+            "E:\main-project\web-recon\warf\warf\output\directory",
         ]
     )
 
@@ -824,7 +916,7 @@ def full_scan_task(domain, pk=None):
 
     subprocess.run(
         [
-            "mv",
+            "move",
             os.path.join(settings.BASE_DIR, f"{subdomain_output_file}"),
             os.path.join(settings.BASE_DIR, f"output/subdomain/"),
         ]
@@ -1028,10 +1120,10 @@ def fullscan_overview(request, pk):
     secret_file = result_filenames[4]
     linkfinder_file = result_filenames[5]
 
-    with open(output_dir + f"subdomain/{subdomain_file}", "r") as read_subdomain_file:
+    with open(output_dir + fr"subdomain\{subdomain_file}", "r") as read_subdomain_file:
         subdom = read_subdomain_file.readlines()
 
-    with open(output_dir + f"directory/{directory_file}", "r") as read_directory_file:
+    with open(output_dir + fr"directory\{directory_file}", "r") as read_directory_file:
         data = read_directory_file.readlines()[2:]
 
     status = []

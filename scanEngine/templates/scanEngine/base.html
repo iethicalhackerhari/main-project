@@ -21,7 +21,7 @@
         <div class="container-fluid">
             <a class="navbar-brand" href="{% url 'index-page' %}" style="font-family: 'Dancing Script', cursive; font-weight:bold">
                 <img src="{% static 'scanEngine/nav-logo.svg' %}" alt="" width="30" height="24" class="d-inline-block align-text-top">
-                WARF
+                webSight
             </a>
           <button class="btn btn-link btn-sm order-1 order-lg-0" id="sidebarToggle" href="#"><i class="fas fa-bars"></i></button>
           <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -109,6 +109,10 @@
                                 <a class="nav-link" href="{% url 'endpoint-page' %}">
                                     <img src="{% static 'scanEngine/linkfinder.svg' %}" height="24px" width="24px" class="me-2">
                                     Endpoints from JS
+                                </a>
+                                <a class="nav-link" href="{% url 'subscan-page' %}">
+                                    <img src="{% static 'scanEngine/linkfinder.svg' %}" height="24px" width="24px" class="me-2">
+                                    Subscan
                                 </a>
                             </nav>
                         </div>

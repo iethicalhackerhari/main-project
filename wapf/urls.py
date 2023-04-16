@@ -19,6 +19,7 @@ from django.conf import settings
 from django.conf.urls.static import static
 from scanEngine.views import (
     subdomain_finder,
+    subscan_finder,
     index,
     about,
     directory_brute_force,
@@ -49,6 +50,7 @@ urlpatterns = [
     path("", index, name="index-page"),
     path("about/", about, name="about-page"),
     path("scan/subdomain/", subdomain_finder, name="subdomain-page"),
+    path("scan/subscan/", subscan_finder, name="subscan-page"),
     path("scan/directory/", directory_brute_force, name="directory-page"),
     path("scan/wayback/", waybackurls, name="wayback-page"),
     path("scan/jsurl/", js_urls, name="jsurl-page"),
