@@ -425,7 +425,7 @@ def subdomain_finder_task(subdomain, gitSubdomain, gitToken, pk=None):
 
         subprocess.run(
             [
-                "move",
+                "mv",
                 os.path.join(settings.BASE_DIR, f"{subdomain_output_file}"),
                 os.path.join(settings.BASE_DIR, f"output/subdomain/"),
                 
@@ -509,7 +509,7 @@ def subscan_finder_task(subdomain, gitSubdomain, gitToken, pk=None):
 
         subprocess.run(
             [
-                "move",
+                "mv",
                 os.path.join(settings.BASE_DIR, f"{subdomain_output_file}"),
                 os.path.join(settings.BASE_DIR, f"output/subdomain/"),
                 
