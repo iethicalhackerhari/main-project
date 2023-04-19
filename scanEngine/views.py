@@ -32,8 +32,8 @@ domain_regex = re.compile(r"([a-z0-9]{2,}\.)+[a-z0-9]{2,5}")
 url_regex = re.compile(
     r"https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()!@:%_\+.~#?&\/\/=]*)"
 )
-output_dir = os.path.join(settings.BASE_DIR, "output\\")
-tools_dir = os.path.join(settings.BASE_DIR, "tools\\" )
+output_dir = os.path.join(settings.BASE_DIR, "output/")
+tools_dir = os.path.join(settings.BASE_DIR, "tools/" )
 
 timestr = time.strftime("%Y-%m-%d-%H-%M")
 subdomain_output_file = "Null"
