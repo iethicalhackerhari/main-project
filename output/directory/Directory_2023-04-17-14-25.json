@@ -1,0 +1,43 @@
+{
+    "info": {
+        "args": "E:\\main-project\\web-recon\\webSight\\webSight\\tools\\dirsearch-new\\dirsearch.py -u https://sreeharirajeev.netlify.app -t 100 -w E:\\main-project\\web-recon\\webSight\\webSight\\tools\\dirsearch-new\\abc.txt --format=json -o E:\\main-project\\web-recon\\webSight\\webSight\\output\\directory\\Directory_2023-04-17-14-25.json -q",
+        "time": "Mon Apr 17 14:26:53 2023"
+    },
+    "results": [
+        {
+            "content-length": 646,
+            "content-type": "text/html",
+            "redirect": "/",
+            "status": 301,
+            "url": "https://sreeharirajeev.netlify.app/index"
+        },
+        {
+            "content-length": 492,
+            "content-type": "application/json",
+            "redirect": "",
+            "status": 200,
+            "url": "https://sreeharirajeev.netlify.app/manifest.json"
+        },
+        {
+            "content-length": 646,
+            "content-type": "text/html",
+            "redirect": "/",
+            "status": 301,
+            "url": "https://sreeharirajeev.netlify.app/.htm"
+        },
+        {
+            "content-length": 67,
+            "content-type": "text/plain",
+            "redirect": "",
+            "status": 200,
+            "url": "https://sreeharirajeev.netlify.app/robots.txt"
+        },
+        {
+            "content-length": 646,
+            "content-type": "text/html",
+            "redirect": "/",
+            "status": 301,
+            "url": "https://sreeharirajeev.netlify.app/.html"
+        }
+    ]
+}

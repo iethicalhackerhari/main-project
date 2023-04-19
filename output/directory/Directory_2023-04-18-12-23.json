@@ -1,0 +1,15 @@
+{
+    "info": {
+        "args": "E:\\main-project\\web-recon\\webSight\\webSight\\tools\\dirsearch-new\\dirsearch.py -u https://sreeharirajeev.netlify.app/ -t 100 -w wordlist\\code-30-43.txt --format=json -o E:\\main-project\\web-recon\\webSight\\webSight\\output\\directory\\Directory_2023-04-18-12-23.json -q",
+        "time": "Tue Apr 18 12:31:24 2023"
+    },
+    "results": [
+        {
+            "content-length": 3870,
+            "content-type": "image/vnd.microsoft.icon",
+            "redirect": "",
+            "status": 200,
+            "url": "https://sreeharirajeev.netlify.app/favicon.ico"
+        }
+    ]
+}

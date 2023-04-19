@@ -1,0 +1,6 @@
+waybackmachine
+https://sitereport.netcraft.com/
+theHarvester
+whatweb
+whois
+osintgram

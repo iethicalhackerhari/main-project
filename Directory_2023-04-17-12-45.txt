@@ -1,0 +1,3 @@
+URL,Status,Size,Content Type,Redirection
+https://sreeharirajeev.netlify.app/index,301,646,text/html,"/"
+https://sreeharirajeev.netlify.app/robots.txt,200,67,text/plain,

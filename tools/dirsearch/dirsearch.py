@@ -31,16 +31,21 @@ from lib.output import CLIOutput, PrintOutput
 
 class Program(object):
     def __init__(self):
-        self.script_path = os.path.dirname(os.path.realpath(__file__))
+        try:
+            self.script_path = os.path.dirname(os.path.realpath(__file__))
+            print('xxxxxxxxxxxxxxxxxxxxxxxxxxx',self.script_path)
+            self.arguments = ArgumentParser(self.script_path)
 
-        self.arguments = ArgumentParser(self.script_path)
+            if self.arguments.quiet:
+                self.output = PrintOutput(self.arguments.color)
+            else:
+                self.output = CLIOutput(self.arguments.color)
 
-        if self.arguments.quiet:
-            self.output = PrintOutput(self.arguments.color)
-        else:
-            self.output = CLIOutput(self.arguments.color)
-
-        self.controller = Controller(self.script_path, self.arguments, self.output)
+            self.controller = Controller(self.script_path, self.arguments, self.output)
+            print('xxxxxxxxxxxxxxxxxxxxxxxxxxx',self.output)
+        except Exception as e:
+            print('ccccccccccccccccccc',e)
+        
 
 
 if __name__ == "__main__":
