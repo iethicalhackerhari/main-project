@@ -1,1 +1,1 @@
-web: gunicorn websight.wsgi
+web: gunicorn main-project.wsgi
