@@ -461,7 +461,7 @@ def subdomain_finder_task(subdomain, gitSubdomain, gitToken, pk=None):
 
         subprocess.run(
             [
-                "move",
+                "mv",
                 os.path.join(settings.BASE_DIR, f"{subdomain_output_file}"),
                 os.path.join(settings.BASE_DIR, f"output/subdomain/"),
                 
@@ -546,7 +546,7 @@ def subscan_finder_task(subdomain, gitSubdomain, gitToken, pk=None):
 
         subprocess.run(
             [
-                "move",
+                "mv",
                 os.path.join(settings.BASE_DIR, f"{subdomain_output_file}"),
                 os.path.join(settings.BASE_DIR, f"output/subdomain/"),
                 
@@ -672,7 +672,7 @@ def directory_brute_force_task(directory, pk=None):
             print('hello')
             print('Subprocess Exception',e)
     # try:
-    #     shutil.move(
+    #     shutil.mv(
             
     #             # rf"E:/main-project/web-recon/webSight/webSight/{directory_output_file}",
     #             # "E:/main-project/web-recon/webSight/webSight/output/directory",
@@ -993,7 +993,7 @@ def full_scan_task(domain, pk=None):
 
     # subprocess.run(
     #     [
-    #         "move",
+    #         "mv",
     #         os.path.join(settings.BASE_DIR, f"{subdomain_output_file}"),
     #         os.path.join(settings.BASE_DIR, f"output\subdomain/"),
     #     ]
@@ -1022,7 +1022,7 @@ def full_scan_task(domain, pk=None):
 
     subprocess.run(
         [
-            "move",
+            "mv",
             os.path.join(settings.BASE_DIR, f"{subdomain_output_file}"),
             os.path.join(settings.BASE_DIR, f"output/subdomain/"),
             
@@ -1072,7 +1072,7 @@ def full_scan_task(domain, pk=None):
         print('hello')
         print('Subprocess Exception',e)
     # try:
-    #     shutil.move(
+    #     shutil.mv(
             
     #             # rf"E:/main-project/web-recon/webSight/webSight/{directory_output_file}",
     #             # "E:/main-project/web-recon/webSight/webSight/output/directory",
