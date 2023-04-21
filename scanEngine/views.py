@@ -28,6 +28,42 @@ from .forms import (
     GithubSubdomainForm,
 )
 
+def get_id(target):
+    url = "https://www.virustotal.com/api/v3/urls"
+
+    payload = f"url=https%3A%2F%2F{target}"
+    headers = {
+        "accept": "application/json",
+        "x-apikey": "f4857af691da521a33d571b180eafc949231d58b863ad99a7945c51d68d96c21",
+        "content-type": "application/x-www-form-urlencoded"
+    }
+
+    response = requests.post(url, data=payload, headers=headers)
+    id = response.json()['data']['id']
+    id = str(id)
+    id = id.split('-')[1]
+    return id
+
+# https://api.builtwith.com/free1/api.json?KEY=d994e4ae-76b0-406f-9c22-7a1a86fb8c39&LOOKUP=builtwith.com
+
+
+
+
+def get_report(target):
+    id = get_id(target)
+    url = f"https://www.virustotal.com/api/v3/urls/{id}"
+
+    headers = {
+        "accept": "application/json",
+        "x-apikey": "f4857af691da521a33d571b180eafc949231d58b863ad99a7945c51d68d96c21"
+    }
+
+    response = requests.get(url, headers=headers)
+
+    print(response.json()['data']['attributes']['total_votes'])
+    return response.json()['data']['attributes']['total_votes']
+    
+# ///////////////////////                                                       health code
 domain_regex = re.compile(r"([a-z0-9]{2,}\.)+[a-z0-9]{2,5}")
 url_regex = re.compile(
     r"https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()!@:%_\+.~#?&\/\/=]*)"
@@ -342,7 +378,7 @@ def scan_result(request, pk):
 def handle_uploaded_file(f):
     global wordlist_name
     wordlist_name = f'{os.path.splitext(f.name)[0]}-{time.strftime("%M-%S")}.txt'
-    with open(os.path.join(settings.BASE_DIR, f'scanEngine\wordlist\{wordlist_name}'), "ab+") as destination:
+    with open(os.path.join(settings.BASE_DIR, f'scanEngine/wordlist/{wordlist_name}'), "ab+") as destination:
         for chunk in f.chunks():
             destination.write(chunk)
 
@@ -425,7 +461,7 @@ def subdomain_finder_task(subdomain, gitSubdomain, gitToken, pk=None):
 
         subprocess.run(
             [
-                "mv",
+                "move",
                 os.path.join(settings.BASE_DIR, f"{subdomain_output_file}"),
                 os.path.join(settings.BASE_DIR, f"output/subdomain/"),
                 
@@ -472,8 +508,9 @@ def subdomain_finder(request, domain_url=None, pk=None):
         if re.match(domain_regex, subdomain) or re.match(domain_regex, gitSubdomain):
             sub_context = subdomain_finder_task.now(
                 subdomain, gitSubdomain, gitToken, pk
-            )
-            return render(request, "scanEngine/subdomain.html", sub_context)
+            )   
+            health=get_report(subdomain)
+            return render(request, "scanEngine/subdomain.html", {'sub_context':sub_context, 'health':health})
         else:
             messages.warning(request, "Invalid Domain")
             return render(request, "scanEngine/subdomain-index.html")
@@ -509,7 +546,7 @@ def subscan_finder_task(subdomain, gitSubdomain, gitToken, pk=None):
 
         subprocess.run(
             [
-                "mv",
+                "move",
                 os.path.join(settings.BASE_DIR, f"{subdomain_output_file}"),
                 os.path.join(settings.BASE_DIR, f"output/subdomain/"),
                 
@@ -581,23 +618,23 @@ def directory_brute_force_task(directory, pk=None):
         )
 
     if dir_wordlist == "on":
-        os.chdir("scanEngine\wordlist")
+        os.chdir("scanEngine/wordlist")
         files = sorted(os.listdir(os.getcwd()), key=os.path.getmtime)
         wordlist_file = files[-1]
         os.chdir("../")
         directory_search = subprocess.run(
             [
              "python",
-                    tools_dir + "dirsearch-new\dirsearch.py",
+                    tools_dir + "dirsearch-new/dirsearch.py",
                     "-u",
                     directory, 
                     "-t",  
                     "100",
                     "-w",
-                    f"wordlist\{wordlist_file}",
+                    f"wordlist/{wordlist_file}",
                     "--format=json",
                     "-o",
-                    os.path.join(settings.BASE_DIR, f"output\directory\{directory_output_file}"),
+                    os.path.join(settings.BASE_DIR, f"output/directory/{directory_output_file}"),
                     "-q"
             ],
             capture_output=True,
@@ -613,16 +650,16 @@ def directory_brute_force_task(directory, pk=None):
             directory_search = subprocess.run(
                 [
                     "python",
-                    tools_dir + "dirsearch-new\dirsearch.py",
+                    tools_dir + "dirsearch-new/dirsearch.py",
                     "-u",
                     directory, 
                     "-t",  
                     "100",
                     "-w",
-                    "E:\main-project\web-recon\webSight\webSight\\tools\dirsearch-new\\abc.txt",
+                    tools_dir + "dirsearch-new/abc.txt",
                     "--format=json",
                     "-o",
-                    os.path.join(settings.BASE_DIR, f"output\directory\{directory_output_file}"),
+                    os.path.join(settings.BASE_DIR, f"output/directory/{directory_output_file}"),
                     "-q"
                 ],
                 capture_output=True,
@@ -637,11 +674,11 @@ def directory_brute_force_task(directory, pk=None):
     # try:
     #     shutil.move(
             
-    #             # rf"E:\main-project\web-recon\webSight\webSight\{directory_output_file}",
-    #             # "E:\main-project\web-recon\webSight\webSight\output\directory",
-    #             # 'E:\main-project\web-recon\webSight\webSight\outputjsurlwww.sreeharirajeev.netlify.app_JS_URLs_2023-02-22-18-01.txt',
+    #             # rf"E:/main-project/web-recon/webSight/webSight/{directory_output_file}",
+    #             # "E:/main-project/web-recon/webSight/webSight/output/directory",
+    #             # 'E:/main-project/web-recon/webSight/webSight/outputjsurlwww.sreeharirajeev.netlify.app_JS_URLs_2023-02-22-18-01.txt',
     #             os.path.join(settings.BASE_DIR, f"{directory_output_file}"),
-    #             os.path.join(settings.BASE_DIR, r"output\directory\\"),
+    #             os.path.join(settings.BASE_DIR, r"output/directory/"),
             
     #     )
     # except Exception as e:
@@ -653,22 +690,27 @@ def directory_brute_force_task(directory, pk=None):
     #     print(directory_search.stdout)
     directory_list = []
     # with open(
-    #     output_dir + f"directory\{directory_output_file}", "r"
+    #     output_dir + f"directory/{directory_output_file}", "r"
     # ) as read_directory_file:
     #     # for line in read_directory_file:
     #     #     directory_list.append(line)
     #     data = read_directory_file.readlines()[2:]
-
-    f=open(output_dir + fr"directory\{directory_output_file}")
-    file=json.load(f)
     status = []
     size = [] 
     directory_link = []
+    try:
 
-    for line in file['results']:
-        status.append(line['status'])
-        size.append(line['content-length'])
-        directory_link.append(line['url'])
+        f=open(output_dir + fr"directory/{directory_output_file}")
+        file=json.load(f)
+        
+
+        for line in file['results']:
+            status.append(line['status'])
+            size.append(line['content-length'])
+            directory_link.append(line['url'])
+    except Exception as e:
+        print('File opening failed :', e)
+     
     # # print(data)
     # for line in data['results']:
     #     # print(line)
@@ -693,7 +735,7 @@ def directory_brute_force(request, domain_url=None, pk=None):
             return render(
                 request, r"scanEngine/directory.html", {"context": dir_context}
             )
-        else:
+        else: 
             messages.warning(request, "Invalid Directory")
             return render(request, r"scanEngine/directory-index.html")
     else:
@@ -953,31 +995,71 @@ def full_scan_task(domain, pk=None):
     #     [
     #         "move",
     #         os.path.join(settings.BASE_DIR, f"{subdomain_output_file}"),
-    #         os.path.join(settings.BASE_DIR, f"output\subdomain\\"),
+    #         os.path.join(settings.BASE_DIR, f"output\subdomain/"),
     #     ]
     # )
+    
+    subdomain_output_file = "{}_{}.txt".format(domain, timestr)
+
+    if pk is not None:
+        scan_target = Scan.objects.get(id=pk)
+        ResultFileName.objects.create(
+            file_name=subdomain_output_file, scan_item=scan_target
+        )
+
+    subscan_search = subprocess.run(
+        [
+            "python",
+            tools_dir + 'SubDomainizer/SubDomainizer.py',
+            "-u",
+            'https://www.'+domain,
+            "-o",
+            subdomain_output_file,
+        ],
+        capture_output=True,
+        text=True,
+    )
+
+    subprocess.run(
+        [
+            "move",
+            os.path.join(settings.BASE_DIR, f"{subdomain_output_file}"),
+            os.path.join(settings.BASE_DIR, f"output/subdomain/"),
+            
+        ], shell=True
+    )
+
+    subdom=subscan_search.stdout
+        
+
+    
+
+        
+
+        
 
     # Directory Brute-force
     global directory_output_file
     directory_output_file = "Directory_{}.txt".format(timestr)
+    
     try:
         print('in else of dirsearch')
         # with open(os.path.join(settings.BASE_DIR, f"{directory_output_file}"), 'w') as fp:
         #     pass
-        print('xxxxxxxxxxxxxxxxxxxxxxxxxxxxx',directory)
+        print('xxxxxxxxxxxxxxxxxxxxxxxxxxxxx',domain)
         directory_search = subprocess.run(
             [
                 "python",
-                tools_dir + "dirsearch-new\dirsearch.py",
+                tools_dir + "dirsearch-new/dirsearch.py",
                 "-u",
                 domain, 
                 "-t",  
                 "100",
                 "-w",
-                "E:\main-project\web-recon\webSight\webSight\\tools\dirsearch-new\\abc.txt",
+                tools_dir + "dirsearch-new/abc.txt",
                 "--format=json",
                 "-o",
-                os.path.join(settings.BASE_DIR, f"output\directory\{directory_output_file}"),
+                os.path.join(settings.BASE_DIR, f"output/directory/{directory_output_file}"),
                 "-q"
             ],
             capture_output=True,
@@ -992,11 +1074,11 @@ def full_scan_task(domain, pk=None):
     # try:
     #     shutil.move(
             
-    #             # rf"E:\main-project\web-recon\webSight\webSight\{directory_output_file}",
-    #             # "E:\main-project\web-recon\webSight\webSight\output\directory",
-    #             # 'E:\main-project\web-recon\webSight\webSight\outputjsurlwww.sreeharirajeev.netlify.app_JS_URLs_2023-02-22-18-01.txt',
+    #             # rf"E:/main-project/web-recon/webSight/webSight/{directory_output_file}",
+    #             # "E:/main-project/web-recon/webSight/webSight/output/directory",
+    #             # 'E:/main-project/web-recon/webSight/webSight/outputjsurlwww.sreeharirajeev.netlify.app_JS_URLs_2023-02-22-18-01.txt',
     #             os.path.join(settings.BASE_DIR, f"{directory_output_file}"),
-    #             os.path.join(settings.BASE_DIR, r"output\directory\\"),
+    #             os.path.join(settings.BASE_DIR, r"output/directory/"),
             
     #     )
     # except Exception as e:
@@ -1008,22 +1090,37 @@ def full_scan_task(domain, pk=None):
     #     print(directory_search.stdout)
     directory_list = []
     # with open(
-    #     output_dir + f"directory\{directory_output_file}", "r"
+    #     output_dir + f"directory/{directory_output_file}", "r"
     # ) as read_directory_file:
     #     # for line in read_directory_file:
     #     #     directory_list.append(line)
     #     data = read_directory_file.readlines()[2:]
-
-    f=open(output_dir + fr"directory\{directory_output_file}")
-    file=json.load(f)
     status = []
     size = [] 
     directory_link = []
+    try:
 
-    for line in file['results']:
-        status.append(line['status'])
-        size.append(line['content-length'])
-        directory_link.append(line['url'])
+        f=open(output_dir + fr"directory/{directory_output_file}")
+        file=json.load(f)
+        
+
+        for line in file['results']:
+            status.append(line['status'])
+            size.append(line['content-length'])
+            directory_link.append(line['url'])
+    except Exception as e:
+        print('File opening failed :', e)
+        
+    # # print(data)
+    # for line in data['results']:
+    #     # print(line)
+    #     # row = re.split(",", line)
+    #     print(line)
+        # status.append(row[0])
+        # size.append(row[1])
+        # directory_link.append(row[2])
+
+    
 
     directory_brute_link = zip(directory_link, size, status)
 
@@ -1118,7 +1215,7 @@ def full_scan_task(domain, pk=None):
 
     global fullscanContext
     fullscanContext = {
-        # "subdom": subdom,
+        "subdom": subdom,
         "directory_link": directory_link,
         "directory_size_status": directory_brute_link,
         "wayback_url": list(unique_wayback_urls),
@@ -1171,10 +1268,10 @@ def fullscan_overview(request, pk):
     secret_file = result_filenames[4]
     linkfinder_file = result_filenames[5]
 
-    with open(output_dir + fr"subdomain\{subdomain_file}", "r") as read_subdomain_file:
+    with open(output_dir + fr"subdomain/{subdomain_file}", "r") as read_subdomain_file:
         subdom = read_subdomain_file.readlines()
 
-    with open(output_dir + fr"directory\{directory_file}", "r") as read_directory_file:
+    with open(output_dir + fr"directory/{directory_file}", "r") as read_directory_file:
         data = read_directory_file.readlines()[2:]
 
     status = []

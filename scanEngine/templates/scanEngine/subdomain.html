@@ -13,13 +13,22 @@
         </div>
     {% endfor %}
 {% endif %}
-
+<style>
+    .harmless{
+        color:green;
+    }
+    .malicious{
+        color:red;
+    }
+</style>
 <a href="{% url 'download-result' %}?scan=subdomain" class="btn btn-danger float-right" download>Download Report</a>
+<p>Domain Health : <span class='harmless'>Harmless - {{health.harmless}}        </span>
+                <span class='malicious'>Malicous - {{health.malicious}}</span></p>
 <th>Subdomain</th>
 </tr>
 </thead>
 <tbody>
-    {% for sub in subdom %}
+    {% for sub in sub_context.subdom %}
     <tr>
         <td><a href="https://{{ sub }}" target="_blank">{{ sub }}</a></td>
     </tr>

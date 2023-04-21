@@ -1,0 +1,10 @@
+www.yahoo.com
+uk.finance.yahoo.com
+news.yahoo.com
+au.news.yahoo.com
+fr.news.yahoo.com
+sg.news.yahoo.com
+tw.news.yahoo.com
+au.sports.yahoo.com
+ca.sports.yahoo.com
+sg.style.yahoo.com

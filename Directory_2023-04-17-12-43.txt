@@ -1,4 +1,0 @@
-# Dirsearch started Mon Apr 17 12:44:07 2023 as: E:\main-project\web-recon\webSight\webSight\tools\dirsearch-new\dirsearch.py -u https://sreeharirajeev.netlify.app/ -t 60 -w E:\main-project\web-recon\webSight\webSight\tools\dirsearch-new\abc.txt --format=plain -o E:\main-project\web-recon\webSight\webSight\Directory_2023-04-17-12-43.txt -q
-
-301   646B   https://sreeharirajeev.netlify.app/index    -> REDIRECTS TO: /
-200    67B   https://sreeharirajeev.netlify.app/robots.txt

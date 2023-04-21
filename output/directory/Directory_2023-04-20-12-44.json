@@ -1,0 +1,22 @@
+{
+    "info": {
+        "args": "E:\\main-project\\web-recon\\webSight\\webSight\\tools\\dirsearch-new\\dirsearch.py -u https://dsdc.mgu.ac.in/ -t 100 -w E:\\main-project\\web-recon\\webSight\\webSight\\tools\\dirsearch-new\\abc.txt --format=json -o E:\\main-project\\web-recon\\webSight\\webSight\\output\\directory\\Directory_2023-04-20-12-44.json -q",
+        "time": "Thu Apr 20 12:49:38 2023"
+    },
+    "results": [
+        {
+            "content-length": 206,
+            "content-type": "text/html",
+            "redirect": "",
+            "status": 403,
+            "url": "https://dsdc.mgu.ac.in/.htm"
+        },
+        {
+            "content-length": 207,
+            "content-type": "text/html",
+            "redirect": "",
+            "status": 403,
+            "url": "https://dsdc.mgu.ac.in/.html"
+        }
+    ]
+}
