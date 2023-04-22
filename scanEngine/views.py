@@ -662,6 +662,7 @@ def directory_brute_force_task(directory, pk=None):
                 ],
                 capture_output=True,
                 text=True,
+                shell=True,
                 
                 
             )
