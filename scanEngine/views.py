@@ -458,7 +458,7 @@ def subdomain_finder_task(subdomain, gitSubdomain, gitToken, pk=None):
             enable_bruteforce=False,
             engines=None,
         )
-
+        
         subprocess.run(
             [
                 "mv",
