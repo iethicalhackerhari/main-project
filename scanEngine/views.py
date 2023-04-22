@@ -18,6 +18,7 @@ import sys
 import re
 import requests
 import time
+import shutil
 from .forms import (
     SubdomainForm,
     DirectoryBruteForce,
@@ -459,12 +460,9 @@ def subdomain_finder_task(subdomain, gitSubdomain, gitToken, pk=None):
             engines=None,
         )
         
-        subprocess.run(
-            [
-                "mv",
-                os.path.join(settings.BASE_DIR, f"{subdomain_output_file}"),
-                os.path.join(settings.BASE_DIR, f"output/subdomain/"),
-            ]
+        shutil.move(
+            os.path.join(settings.BASE_DIR, f"{subdomain_output_file}"),
+            os.path.join(settings.BASE_DIR, r"output/subdomain/")
         )
 
         context = {"subdom": subdom}
@@ -600,7 +598,7 @@ def subscan_finder(request, domain_url=None, pk=None):
     else:
         return render(request, "scanEngine/subscan-index.html")
 
-import shutil
+
 import json
 ##############################################################################################################
 # Directory Brute Force
@@ -670,30 +668,11 @@ def directory_brute_force_task(directory, pk=None):
         except Exception as e:
             print('hello')
             print('Subprocess Exception',e)
-    # try:
-    #     shutil.mv(
+
             
-    #             # rf"E:/main-project/web-recon/webSight/webSight/{directory_output_file}",
-    #             # "E:/main-project/web-recon/webSight/webSight/output/directory",
-    #             # 'E:/main-project/web-recon/webSight/webSight/outputjsurlwww.sreeharirajeev.netlify.app_JS_URLs_2023-02-22-18-01.txt',
-    #             os.path.join(settings.BASE_DIR, f"{directory_output_file}"),
-    #             os.path.join(settings.BASE_DIR, r"output/directory/"),
-            
-    #     )
-    # except Exception as e:
-    #     print('Exception Occured',e)
-    # with open(
-    #     output_dir + f"directory/{directory_output_file}", "a+"
-    # ) as write_directory_output:
-    #     write_directory_output.writelines(directory_search.stdout)
-    #     print(directory_search.stdout)
+  
     directory_list = []
-    # with open(
-    #     output_dir + f"directory/{directory_output_file}", "r"
-    # ) as read_directory_file:
-    #     # for line in read_directory_file:
-    #     #     directory_list.append(line)
-    #     data = read_directory_file.readlines()[2:]
+ 
     status = []
     size = [] 
     directory_link = []
@@ -1070,30 +1049,9 @@ def full_scan_task(domain, pk=None):
     except Exception as e:
         print('hello')
         print('Subprocess Exception',e)
-    # try:
-    #     shutil.mv(
-            
-    #             # rf"E:/main-project/web-recon/webSight/webSight/{directory_output_file}",
-    #             # "E:/main-project/web-recon/webSight/webSight/output/directory",
-    #             # 'E:/main-project/web-recon/webSight/webSight/outputjsurlwww.sreeharirajeev.netlify.app_JS_URLs_2023-02-22-18-01.txt',
-    #             os.path.join(settings.BASE_DIR, f"{directory_output_file}"),
-    #             os.path.join(settings.BASE_DIR, r"output/directory/"),
-            
-    #     )
-    # except Exception as e:
-    #     print('Exception Occured',e)
-    # with open(
-    #     output_dir + f"directory/{directory_output_file}", "a+"
-    # ) as write_directory_output:
-    #     write_directory_output.writelines(directory_search.stdout)
-    #     print(directory_search.stdout)
+   
     directory_list = []
-    # with open(
-    #     output_dir + f"directory/{directory_output_file}", "r"
-    # ) as read_directory_file:
-    #     # for line in read_directory_file:
-    #     #     directory_list.append(line)
-    #     data = read_directory_file.readlines()[2:]
+    
     status = []
     size = [] 
     directory_link = []
