@@ -953,6 +953,7 @@ def main(domain, threads, savefile, ports, silent, verbose, enable_bruteforce, e
 
     subdomains = set(subdomains_queue)
     for subdomain in subdomains:
+        print('progress...')
         print(subdomain)
         search_list.add(subdomain)
 

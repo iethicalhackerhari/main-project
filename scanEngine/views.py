@@ -486,6 +486,7 @@ def subdomain_finder_task(subdomain, gitSubdomain, gitToken, pk=None):
         gitsubs_list = []
 
         for line in result.stdout.splitlines():
+            print(line)
             gitsubs_list.append(line)
 
         with open(gitsubs, "a+") as write_gitsubs_file:
@@ -1438,61 +1439,63 @@ def download_result(request, pk=None):
         link_finder = request.GET.get("scan", None)
 
         output_dir = os.path.join(settings.BASE_DIR, "output/")
+        try:
+            if subdomain == "subdomain":
+                output_file = output_dir + f"subdomain/{subdomain_output_file}"
+                filename = f"{subdomain_output_file}"
+                with open(output_file, "r") as fh:
+                    response = HttpResponse(
+                        fh.read(), content_type="text/plain charset=utf-8"
+                    )
+                    response["Content-Disposition"] = "attachment; filename=%s" % filename
+                    return response
 
-        if subdomain == "subdomain":
-            output_file = output_dir + f"subdomain/{subdomain_output_file}"
-            filename = f"{subdomain_output_file}"
-            with open(output_file, "r") as fh:
-                response = HttpResponse(
-                    fh.read(), content_type="text/plain charset=utf-8"
-                )
-                response["Content-Disposition"] = "attachment; filename=%s" % filename
-                return response
+            if directory == "directory":
+                output_file = output_dir + f"directory/{directory_output_file}"
+                filename = f"{directory_output_file}"
+                with open(output_file, "r") as fh:
+                    response = HttpResponse(fh.read(), content_type="text/html")
+                    response["Content-Disposition"] = "attachment; filename=%s" % filename
+                    return response
 
-        if directory == "directory":
-            output_file = output_dir + f"directory/{directory_output_file}"
-            filename = f"{directory_output_file}"
-            with open(output_file, "r") as fh:
-                response = HttpResponse(fh.read(), content_type="text/html")
-                response["Content-Disposition"] = "attachment; filename=%s" % filename
-                return response
+            if wayback == "wayback":
+                output_file = output_dir + f"wayback/{wayback_output_file}"
+                filename = f"{wayback_output_file}"
+                with open(output_file, "r") as fh:
+                    response = HttpResponse(fh.read(), content_type="text/html")
+                    response["Content-Disposition"] = "attachment; filename=%s" % filename
+                    return response
 
-        if wayback == "wayback":
-            output_file = output_dir + f"wayback/{wayback_output_file}"
-            filename = f"{wayback_output_file}"
-            with open(output_file, "r") as fh:
-                response = HttpResponse(fh.read(), content_type="text/html")
-                response["Content-Disposition"] = "attachment; filename=%s" % filename
-                return response
+            if jsurl == "jsurl":
+                output_file = output_dir + f"jsurl/{jsurl_output_file}"
+                filename = f"{jsurl_output_file}"
+                with open(output_file, "r") as fh:
+                    response = HttpResponse(fh.read(), content_type="text/html")
+                    response["Content-Disposition"] = "attachment; filename=%s" % filename
+                    return response
 
-        if jsurl == "jsurl":
-            output_file = output_dir + f"jsurl/{jsurl_output_file}"
-            filename = f"{jsurl_output_file}"
-            with open(output_file, "r") as fh:
-                response = HttpResponse(fh.read(), content_type="text/html")
-                response["Content-Disposition"] = "attachment; filename=%s" % filename
-                return response
+            if secret == "secret":
+                global secret_output_file
+                if pk is not None:
+                    secret_output_file = ResultFileName.objects.filter(
+                        scan_item=Scan.objects.get(id=pk)
+                    ).first()
 
-        if secret == "secret":
-            global secret_output_file
-            if pk is not None:
-                secret_output_file = ResultFileName.objects.filter(
-                    scan_item=Scan.objects.get(id=pk)
-                ).first()
+                output_file = output_dir + f"secrets/{secret_output_file}"
+                filename = f"{secret_output_file}"
+                with open(output_file, "r") as fh:
+                    response = HttpResponse(fh.read(), content_type="text/html")
+                    response["Content-Disposition"] = "attachment; filename=%s" % filename
+                    return response
 
-            output_file = output_dir + f"secrets/{secret_output_file}"
-            filename = f"{secret_output_file}"
-            with open(output_file, "r") as fh:
-                response = HttpResponse(fh.read(), content_type="text/html")
-                response["Content-Disposition"] = "attachment; filename=%s" % filename
-                return response
-
-        if link_finder == "linkfinder":
-            output_file = output_dir + f"linkfinder/{linkfinder_output_file}"
-            filename = f"{linkfinder_output_file}"
-            with open(output_file, "r") as fh:
-                response = HttpResponse(fh.read(), content_type="text/html")
-                response["Content-Disposition"] = "attachment; filename=%s" % filename
-                return response
+            if link_finder == "linkfinder":
+                output_file = output_dir + f"linkfinder/{linkfinder_output_file}"
+                filename = f"{linkfinder_output_file}"
+                with open(output_file, "r") as fh:
+                    response = HttpResponse(fh.read(), content_type="text/html")
+                    response["Content-Disposition"] = "attachment; filename=%s" % filename
+                    return response
+        except Exception as e:
+            print(e)
     else:
         return render(request, "users/dashboard.html")
