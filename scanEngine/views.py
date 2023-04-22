@@ -450,11 +450,11 @@ def subdomain_finder_task(subdomain, gitSubdomain, gitToken, pk=None):
 
         subdom = sublist3r.main(
             subdomain,
-            40,
+            100,
             subdomain_output_file,
             ports=None,
             silent=True,
-            verbose=True,
+            verbose=False,
             enable_bruteforce=False,
             engines=None,
         )
@@ -464,8 +464,7 @@ def subdomain_finder_task(subdomain, gitSubdomain, gitToken, pk=None):
                 "mv",
                 os.path.join(settings.BASE_DIR, f"{subdomain_output_file}"),
                 os.path.join(settings.BASE_DIR, f"output/subdomain/"),
-                
-            ], shell=True
+            ]
         )
 
         context = {"subdom": subdom}
