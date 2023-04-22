@@ -666,7 +666,12 @@ def directory_brute_force_task(directory, pk=None):
                 
                 
             )
-            print( '====================================',directory_search.stdout)
+            print( '====================================',)
+            res=directory_search.stdout
+            res = res.split('\n')
+            for r in res:
+                r=r[11:]
+                print(r.split('-'))
         except Exception as e:
             print('hello')
             print('Subprocess Exception',e)
@@ -678,16 +683,30 @@ def directory_brute_force_task(directory, pk=None):
     status = []
     size = [] 
     directory_link = []
-    try:
+    # try:
 
-        f=open(os.path.join(settings.BASE_DIR, f"output/directory/{directory_output_file}"))
-        file=json.load(f)
+    #     f=open(os.path.join(settings.BASE_DIR, f"output/directory/{directory_output_file}"))
+    #     file=json.load(f)
         
 
-        for line in file['results']:
-            status.append(line['status'])
-            size.append(line['content-length'])
-            directory_link.append(line['url'])
+    #     for line in file['results']:
+    #         status.append(line['status'])
+    #         size.append(line['content-length'])
+    #         directory_link.append(line['url'])
+    # except Exception as e:
+    #     print('File opening failed :', e)
+    try:
+
+        # f=open(os.path.join(settings.BASE_DIR, f"output\directory\{directory_output_file}"))
+        # file=json.load(f)
+        
+
+        for r in res:
+            r=r[11:]
+            r=r.split('-')
+            status.append(r[0])
+            size.append(r[1])
+            directory_link.append(r[2])
     except Exception as e:
         print('File opening failed :', e)
      
