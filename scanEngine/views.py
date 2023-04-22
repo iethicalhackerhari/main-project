@@ -679,7 +679,7 @@ def directory_brute_force_task(directory, pk=None):
     directory_link = []
     try:
 
-        f=open(output_dir + fr"directory/{directory_output_file}")
+        f=open(os.path.join(settings.BASE_DIR, f"output/directory/{directory_output_file}"))
         file=json.load(f)
         
 
