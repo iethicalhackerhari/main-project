@@ -452,7 +452,7 @@ def subdomain_finder_task(subdomain, gitSubdomain, gitToken, pk=None):
         subdom = sublist3r.main(
             subdomain,
             100,
-            subdomain_output_file,
+            os.path.join(settings.BASE_DIR, f"output/subdomain/{subdomain_output_file}"),
             ports=None,
             silent=True,
             verbose=False,
@@ -460,10 +460,10 @@ def subdomain_finder_task(subdomain, gitSubdomain, gitToken, pk=None):
             engines=None,
         )
         
-        shutil.move(
-            os.path.join(settings.BASE_DIR, f"{subdomain_output_file}"),
-            os.path.join(settings.BASE_DIR, r"output/subdomain/")
-        )
+        # shutil.move(
+        #     os.path.join(settings.BASE_DIR, f"{subdomain_output_file}"),
+        #     os.path.join(settings.BASE_DIR, r"output/subdomain/")
+        # )
 
         context = {"subdom": subdom}
         return context
