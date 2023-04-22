@@ -81,12 +81,13 @@ WSGI_APPLICATION = 'wapf.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'test',
+        #'ENGINE': 'django.db.backends.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'railway',
         'USER': 'postgres',
-        'PASSWORD': 'test123',
-        'HOST': 'localhost',
-        'PORT': '5432',
+        'PASSWORD': 'YrqrO3MhXs55NtAO6cIZ',
+        'HOST': 'containers-us-west-22.railway.app',
+        'PORT': '7755',
     }
 }
 
